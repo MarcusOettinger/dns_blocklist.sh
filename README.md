@@ -3,7 +3,7 @@ Create a DNS-blocklist for use with unbound or dnsmasq
 
 ## source ##
 The script was found on [https://github.com/sfeakes/ipfire-scripts](https://github.com/sfeakes/ipfire-scripts) - kudos to sfeakes.
-I adapted the original simply to suit my needs.
+I adapted the original simply to suit my needs (it is used on debian systems).
 
 ## description ##
 The script will download a list of hosts / domains that are labeled as malicious from multiple sources and create a file that will cause unbound or dnsmasq to block them via DNS queries.
@@ -11,13 +11,20 @@ The file will have duplicates and most (if not all) bad entries removed.  If you
 For retreiving sources, Host file format and adblock format is supported.
 DNS configurations for unbound and dnsmasq are supported, if you want to write a local hosts file, you will need to modify the output with you local configuration.
 
-To install, download the script, copy to the desired location and chmod 755 dns_blocklist.sh.
+To install, download the script, copy to desired location and chmod 755 dns_blocklist.sh.
 
-Then simply run the script every time you want to update the blocklist or use your favourite cron to run it in regular intervals.
+Then run the script every time you want to update the blocklist or use your favourite cron to run it in regularly.
 
-### If you are using dnsmasq instead of unbound, there is one further step ###
-- create a file `/etc/sysconfig/dnsmasq` with following the contents
-- `CUSTOM_ARGS="--addn-hosts=/var/ipfire/dhcp/blocked.hosts"`
+### configure unbound or dnsmasq ###
+RTFM - the manual is your friend. Currently, on my debian boxes
+- for unbound, add this line in your configuration (e.g. /etc/unbound.conf):
+``` 
+    include: /etc/unbound/unbound.conf.d/blocklist.conf
+```
+- for dnsmasq, add this line in your dnsmasq configuration (e.g. /etc/dnsmasq.conf):
+``` 
+    addn-hosts=/usr/local/DNSblocklist/blocked.hosts
+```
 
 ### Command line parameters ###
 ```
@@ -56,7 +63,7 @@ wanderburst.akamaihd.net
 wanderburst-a.akamaihd.net
 ```
 
-#### IP that the DNS server returns  ####
+#### server return value  ####
 Example
 ```
 dns_blocklist.sh –r 127.0.0.1
@@ -132,4 +139,4 @@ Enable sources with –s Can be a list of numbers and urls, that are comma separ
 |[Airelle's host file](http://rlwpx.free.fr/WPFF/hosts.htm)                        | NOT SUPPORTED YET                                    | CC Attribution 3.0 |
 |[Shalla's Blacklists ](http://www.shallalist.de/)                                 | NOT SUPPORTED YET                                    | ? |
 
-Sources markes as *Adblock*, are not the best source format as they are specific to web browser blocking and not domain level blocking. But this script will pass the format and extract any TLD's that are listed. 
+Sources marked as *Adblock*, are not the best source format as they are specific to web browser blocking and not domain level blocking. But this script will pass the format and extract any TLD's that are listed. 
