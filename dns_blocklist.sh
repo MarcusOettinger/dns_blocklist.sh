@@ -49,8 +49,8 @@ BLOCK_HOST_URLS=( \
 #
 
 TMP_HOSTS_FILE="/var/tmp/hosts.block"
-UNBOUND_FINAL_HOSTS="/etc/unbound/local.d/blocklist.conf"
-DNSMASQ_FINAL_HOSTS="/var/ipfire/dhcp/blocked.hosts"
+UNBOUND_FINAL_HOSTS="/etc/unbound/unbound.conf.d/blocklist.conf"
+DNSMASQ_FINAL_HOSTS="/usr/local/DNSblocklist/blocked.hosts"
 
 UNBOUND_SYSTEMD_SERVICE="/etc/init.d/unbound"
 DNSMASQ_SYSTEMD_SERVICE="/etc/init.d/dnsmasq"
@@ -242,6 +242,7 @@ else
   if [ $USE_UNBIND -eq 0 ]; then
     FINAL_HOSTS=$UNBOUND_FINAL_HOSTS
   else
+    test -d `dirname $DNSMASQ_FINAL_HOSTS` || mkdir -p `dirname $DNSMASQ_FINAL_HOSTS`
     FINAL_HOSTS=$DNSMASQ_FINAL_HOSTS
   fi
 fi
